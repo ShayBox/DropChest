@@ -3,6 +3,7 @@ DropChest
 =========
 
 Copyright (c) 2011-2012, Moritz Schmale <narrow.m@gmail.com>  
+Copyright (c) 2016-2019, Shayne Hartford <shayneehartford@gmail.com>  
 DropChest is licensed under [GNU GENERAL PUBLIC LICENSE Version 3][License]
 
 Get support on my [Bukkit forum thread][Forum].  
