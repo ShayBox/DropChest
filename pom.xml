@@ -1,59 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 	Maven build file for DropChest
 
 	Copyright (c) 2011-2012 Moritz Schmale <narrow.m@gmail.com>
+	Copyright (c) 2016-2019 Shayne Hartford <shayneehartford@gmail.com>
 	DropChest is licensed under GNU GENERAL PUBLIC LICENSE Version 3
 -->
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+    <!-- Project information -->
+    <groupId>com.narrowtux</groupId>
+    <artifactId>dropchest</artifactId>
+    <version>dev-SNAPSHOT</version>
+    <name>DropChest</name>
+    <url>http://www.narrowtux.com</url>
+    <description>Sucks dropped loot into Chests. Useful for automatic farming or gathering loot from mob traps.
+    </description>
 
-	<!-- Project information -->
-	<groupId>com.narrowtux</groupId>
-	<artifactId>dropchest</artifactId>
-	<version>dev-SNAPSHOT</version>
-	<name>DropChest</name>
-	<url>http://www.narrowtux.com</url>
-	<description>Sucks dropped loot into Chests. Useful for automatic farming or gathering loot from mob traps.</description>
+    <packaging>jar</packaging>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<bukkit.version>1.1-R4-SNAPSHOT</bukkit.version>
-	</properties>
+    <properties>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
-	<!-- License -->
-	<licenses>
-		<license>
-			<name>GNU GENERAL PUBLIC LICENSE Version 3</name>
-			<url>http://www.gnu.org/licenses/gpl.html</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
+    <!-- License -->
+    <licenses>
+        <license>
+            <name>GNU GENERAL PUBLIC LICENSE Version 3</name>
+            <url>http://www.gnu.org/licenses/gpl.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
-	<!-- Source code -->
-	<scm>
-		<developerConnection>scm:git:git@github.com:narrowtux/${project.name}.git</developerConnection>
-		<connection>scm:git:git://github.com/narrowtux/${project.name}.git</connection>
-		<url>https://github.com/narrowtux/${project.name}</url>
-	</scm>
-
-	<!-- Continuous integration -->
-	<ciManagement>
-		<system>jenkins</system>
-		<url>http://ci.spout.org</url>
-	</ciManagement>
+    <!-- Source code -->
+    <scm>
+        <developerConnection>scm:git:git@github.com:shaybox/${project.name}.git</developerConnection>
+        <connection>scm:git:git://github.com/shaybox/${project.name}.git</connection>
+        <url>https://github.com/shaybox/${project.name}</url>
+    </scm>
 
     <!-- Repository locations -->
     <repositories>
         <repository>
-            <id>spout-repo</id>
-            <url>http://repo.spout.org</url>
-            <releases>
-                <updatePolicy>daily</updatePolicy>
-            </releases>
-            <snapshots>
-                <updatePolicy>daily</updatePolicy>
-            </snapshots>
+            <id>spigotmc-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>sonatype</id>
+            <url>https://oss.sonatype.org/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 
@@ -61,55 +63,54 @@
     <dependencies>
         <!-- Bukkit -->
         <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>1.1-R4-SNAPSHOT</version>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.12.2-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <!-- Third-party plugins -->
         <dependency>
-            <groupId>net.milkbowl</groupId>
-            <artifactId>vault</artifactId>
-            <version>1.2.0-b000</version>
+            <groupId>com.github.MilkBowl</groupId>
+            <artifactId>VaultAPI</artifactId>
+            <version>1.7</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
-	<build>
-		<defaultGoal>clean package</defaultGoal>
-		<sourceDirectory>${basedir}/src/main/java</sourceDirectory>
-		<!-- Resources -->
-		<resources>
-			<resource>
-				<targetPath>.</targetPath>
-				<filtering>true</filtering>
-				<directory>${basedir}/src/main/resources</directory>
-				<includes>
-					<include>plugin.yml</include>
-				</includes>
-			</resource>
-			<resource>
-				<targetPath>.</targetPath>
-				<filtering>false</filtering>
-				<directory>${basedir}</directory>
-				<includes>
-					<include>LICENSE.txt</include>
-				</includes>
-			</resource>
-		</resources>
-		<!-- Plugins -->
-		<plugins>
-			<!-- Compile plugin -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
-			</plugin>
-			<!-- JAR creation plugin -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.3.2</version>
-			</plugin>
-		</plugins>
-	</build>
-
+    <build>
+        <defaultGoal>clean package</defaultGoal>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.7.0</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
 </project>
