@@ -23,58 +23,57 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockRedstoneEvent;
 
 public class DropChestBlockListener implements Listener {
-	private final DropChest plugin;
-	public DropChestBlockListener(final DropChest instance) {
-		plugin = instance;
-	}
-	
-	@EventHandler
-	public void onBlockBreak(BlockBreakEvent event){
-		Block block = event.getBlock();
-		if(DropChestItem.acceptsBlockType(block.getType())){
-			DropChestItem dci = plugin.getChestByBlock(block);
-			if(dci!=null)
-			{
-				if(dci.getOwner().equals(event.getPlayer().getName())){
-					plugin.removeChest(dci);
-					event.getPlayer().sendMessage(ChatColor.GREEN+"Removed Dropchest.");
-				} else {
-					event.getPlayer().sendMessage("That's not your chest.");
-				}
-			}
-		}
-	}
+    private final DropChest plugin;
 
-	@EventHandler
-	public void onBlockRedstoneChange(BlockRedstoneEvent event){
-		if(!plugin.config.isDropItemsOnRedstone()){
-			return;
-		}
-		if(event.getNewCurrent()==0){
-			return;
-		}
-		Block block = event.getBlock();
-		BlockFace faces[] = {BlockFace.NORTH,BlockFace.EAST,BlockFace.SOUTH,BlockFace.WEST};
-		for(BlockFace face:faces){
-			Block chest = block.getRelative(face);
-			if(DropChestItem.acceptsBlockType(chest.getType())){
-				DropChestItem dci = plugin.getChestByBlock(chest);
-				if(dci!=null){
-					dci.dropAll();
-					return;
-				}
-			}
-		}
-		Block chest = null;
-		chest = block.getRelative(BlockFace.UP).getRelative(BlockFace.UP);
-		DropChestItem dci = plugin.getChestByBlock(chest);
-		if(dci!=null){
-			dci.dropAll();
-			return;
-		}
-	}
+    public DropChestBlockListener(final DropChest instance) {
+        plugin = instance;
+    }
+
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        Block block = event.getBlock();
+        if (DropChestItem.acceptsBlockType(block.getType())) {
+            DropChestItem dci = plugin.getChestByBlock(block);
+            if (dci != null) {
+                if (dci.getOwner().equals(event.getPlayer().getName())) {
+                    plugin.removeChest(dci);
+                    event.getPlayer().sendMessage(ChatColor.GREEN + "Removed Dropchest.");
+                } else {
+                    event.getPlayer().sendMessage("That's not your chest.");
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onBlockRedstoneChange(BlockRedstoneEvent event) {
+        if (!plugin.config.isDropItemsOnRedstone()) {
+            return;
+        }
+        if (event.getNewCurrent() == 0) {
+            return;
+        }
+        Block block = event.getBlock();
+        BlockFace[] faces = {BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
+        for (BlockFace face : faces) {
+            Block chest = block.getRelative(face);
+            if (DropChestItem.acceptsBlockType(chest.getType())) {
+                DropChestItem dci = plugin.getChestByBlock(chest);
+                if (dci != null) {
+                    dci.dropAll();
+                    return;
+                }
+            }
+        }
+        Block chest = null;
+        chest = block.getRelative(BlockFace.UP).getRelative(BlockFace.UP);
+        DropChestItem dci = plugin.getChestByBlock(chest);
+        if (dci != null) {
+            dci.dropAll();
+            return;
+        }
+    }
 }

@@ -18,9 +18,9 @@
 package com.narrowtux.dropchest;
 
 public enum ChestRequestType {
-	NONE,
-	CREATE,
-	DELETE,
-	WHICH,
-	CHESTINFO,
+    NONE,
+    CREATE,
+    DELETE,
+    WHICH,
+    CHESTINFO,
 }

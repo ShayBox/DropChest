@@ -20,15 +20,15 @@ package com.narrowtux.dropchest;
 import java.util.TimerTask;
 
 public class RedstoneTrigger extends TimerTask {
-	private DropChestItem item;
+    private DropChestItem item;
 
-	public RedstoneTrigger(DropChestItem item){
-		this.item = item;
-	}
+    public RedstoneTrigger(DropChestItem item) {
+        this.item = item;
+    }
 
-	@Override
-	public void run() {
-		item.setRedstone(false);
-	}
+    @Override
+    public void run() {
+        item.setRedstone(false);
+    }
 
 }

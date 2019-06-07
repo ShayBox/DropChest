@@ -17,56 +17,55 @@
 
 package com.narrowtux.dropchest.api;
 
+import com.narrowtux.dropchest.DropChestItem;
 import org.bukkit.entity.Item;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import com.narrowtux.dropchest.DropChestItem;
+public class DropChestSuckEvent extends Event implements Cancellable {
+    private static final HandlerList handlers = new HandlerList();
+    private DropChestItem chest;
+    private Item item;
+    private boolean cancel;
 
-public class DropChestSuckEvent extends Event implements Cancellable{
-	private DropChestItem chest;
-	private Item item;
-	private boolean cancel;
-	private static final HandlerList handlers = new HandlerList();
-	
-	public DropChestSuckEvent(DropChestItem chest, Item item) {
-		cancel = false;
-		this.chest = chest;
-		this.item = item;
-	}
-	
-	public HandlerList getHandlers() {
-		return handlers;
-	}
+    public DropChestSuckEvent(DropChestItem chest, Item item) {
+        cancel = false;
+        this.chest = chest;
+        this.item = item;
+    }
 
-	public static HandlerList getHandlerList() {
-		return handlers;
-	}
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 
-	/**
-	 * @return the chest
-	 */
-	public DropChestItem getChest() {
-		return chest;
-	}
+    public HandlerList getHandlers() {
+        return handlers;
+    }
 
-	/**
-	 * @return the item
-	 */
-	public Item getItem() {
-		return item;
-	}
+    /**
+     * @return the chest
+     */
+    public DropChestItem getChest() {
+        return chest;
+    }
+
+    /**
+     * @return the item
+     */
+    public Item getItem() {
+        return item;
+    }
 
 
-	@Override
-	public boolean isCancelled() {
-		return cancel;
-	}
+    @Override
+    public boolean isCancelled() {
+        return cancel;
+    }
 
-	@Override
-	public void setCancelled(boolean arg0) {
-		cancel = arg0;
-	}
+    @Override
+    public void setCancelled(boolean arg0) {
+        cancel = arg0;
+    }
 
 }

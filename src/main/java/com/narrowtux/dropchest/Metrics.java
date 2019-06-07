@@ -33,24 +33,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class Metrics {
 
@@ -84,22 +72,18 @@ public class Metrics {
      * Interval of time to ping (in minutes)
      */
     private final static int PING_INTERVAL = 10;
-
-    /**
-     * A map of all of the graphs for each plugin
-     */
-    private Map<Plugin, Set<Graph>> graphs = Collections.synchronizedMap(new HashMap<Plugin, Set<Graph>>());
-
-    /**
-     * A convenient map of the default Graph objects (used by addCustomData mainly)
-     */
-    private Map<Plugin, Graph> defaultGraphs = Collections.synchronizedMap(new HashMap<Plugin, Graph>());
-
     /**
      * The plugin configuration file
      */
     private final YamlConfiguration configuration;
-
+    /**
+     * A map of all of the graphs for each plugin
+     */
+    private Map<Plugin, Set<Graph>> graphs = Collections.synchronizedMap(new HashMap<Plugin, Set<Graph>>());
+    /**
+     * A convenient map of the default Graph objects (used by addCustomData mainly)
+     */
+    private Map<Plugin, Graph> defaultGraphs = Collections.synchronizedMap(new HashMap<Plugin, Graph>());
     /**
      * Unique server id
      */
@@ -122,6 +106,31 @@ public class Metrics {
 
         // Load the guid then
         guid = configuration.getString("guid");
+    }
+
+    /**
+     * Encode a key/value data pair to be used in a HTTP post request. This INCLUDES a & so the first
+     * key/value pair MUST be included manually, e.g:
+     * <p>
+     * String httpData = encode("guid") + "=" + encode("1234") + encodeDataPair("authors") + "..";
+     * </p>
+     *
+     * @param key
+     * @param value
+     * @return
+     */
+    private static String encodeDataPair(String key, String value) throws UnsupportedEncodingException {
+        return "&" + encode(key) + "=" + encode(value);
+    }
+
+    /**
+     * Encode text as UTF-8
+     *
+     * @param text
+     * @return
+     */
+    private static String encode(String text) throws UnsupportedEncodingException {
+        return URLEncoder.encode(text, "UTF-8");
     }
 
     /**
@@ -229,7 +238,7 @@ public class Metrics {
                 + encodeDataPair("authors", authors)
                 + encodeDataPair("version", description.getVersion())
                 + encodeDataPair("server", Bukkit.getVersion())
-                + encodeDataPair("players", Integer.toString(Bukkit.getServer().getOnlinePlayers().length))
+                + encodeDataPair("players", Integer.toString(Bukkit.getServer().getOnlinePlayers().size()))
                 + encodeDataPair("revision", String.valueOf(REVISION));
 
         // If we're pinging, append it
@@ -242,7 +251,7 @@ public class Metrics {
 
         // Acquire a lock on the graphs, which lets us make the assumption we also lock everything
         // inside of the graph (e.g plotters)
-        synchronized(graphs) {
+        synchronized (graphs) {
             Iterator<Graph> iter = graphs.iterator();
 
             while (iter.hasNext()) {
@@ -369,76 +378,19 @@ public class Metrics {
     }
 
     /**
-     * Encode a key/value data pair to be used in a HTTP post request. This INCLUDES a & so the first
-     * key/value pair MUST be included manually, e.g:
-     * <p>
-     *     String httpData = encode("guid") + "=" + encode("1234") + encodeDataPair("authors") + "..";
-     * </p>
-     *
-     * @param key
-     * @param value
-     * @return
-     */
-    private static String encodeDataPair(String key, String value) throws UnsupportedEncodingException {
-        return "&" + encode(key) + "=" + encode(value);
-    }
-
-    /**
-     * Encode text as UTF-8
-     *
-     * @param text
-     * @return
-     */
-    private static String encode(String text) throws UnsupportedEncodingException {
-        return URLEncoder.encode(text, "UTF-8");
-    }
-
-    /**
      * Represents a custom graph on the website
      */
     public static class Graph {
 
         /**
-         * The graph's type that will be visible on the website
-         */
-        public static enum Type {
-
-            /**
-             * A simple line graph which also includes a scrollable timeline viewer to view
-             * as little or as much of the data as possible.
-             */
-            Line,
-
-            /**
-             * An area graph. This is the same as a line graph except the area under the curve is shaded
-             */
-            Area,
-
-            /**
-             * A column graph, which is a graph where the data is represented by columns on the vertical axis,
-             * i.e they go up and down.
-             */
-            Column,
-
-            /**
-             * A pie graph. The graph is generated by taking the data for the last hour and summing it
-             * together. Then the percentage for each plotter is calculated via round( (plot / total) * 100, 2 )
-             */
-            Pie
-
-        }
-
-        /**
          * What the graph should be plotted as
          */
         private final Type type;
-
         /**
          * The graph's name, alphanumeric and spaces only :)
          * If it does not comply to the above when submitted, it is rejected
          */
         private final String name;
-
         /**
          * The set of plotters that are contained within this graph
          */
@@ -478,6 +430,7 @@ public class Metrics {
 
         /**
          * Gets an <b>unmodifiable</b> set of the plotter objects in the graph
+         *
          * @return
          */
         public Set<Plotter> getPlotters() {
@@ -497,6 +450,36 @@ public class Metrics {
 
             Graph graph = (Graph) object;
             return graph.type == type && graph.name.equals(name);
+        }
+
+        /**
+         * The graph's type that will be visible on the website
+         */
+        public enum Type {
+
+            /**
+             * A simple line graph which also includes a scrollable timeline viewer to view
+             * as little or as much of the data as possible.
+             */
+            Line,
+
+            /**
+             * An area graph. This is the same as a line graph except the area under the curve is shaded
+             */
+            Area,
+
+            /**
+             * A column graph, which is a graph where the data is represented by columns on the vertical axis,
+             * i.e they go up and down.
+             */
+            Column,
+
+            /**
+             * A pie graph. The graph is generated by taking the data for the last hour and summing it
+             * together. Then the percentage for each plotter is calculated via round( (plot / total) * 100, 2 )
+             */
+            Pie
+
         }
 
     }
