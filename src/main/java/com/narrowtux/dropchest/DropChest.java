@@ -67,7 +67,9 @@ public class DropChest extends JavaPlugin {
         HashMap<Material, Integer> map = new HashMap<Material, Integer>();
         for (int i = 0; i < inv.getSize(); i++) {
             ItemStack stack = inv.getItem(i);
-            if (stack != null && stack.getTypeId() != 0) {
+            // TODO: Fix
+//            if (stack != null && stack.getTypeId() != 0) {
+            if (stack != null) {
                 Material mat = stack.getType();
                 Integer count = stack.getAmount();
                 if (map.containsKey(mat)) {
@@ -157,7 +159,6 @@ public class DropChest extends JavaPlugin {
         }
         File yamlFile = new File(dir, "dropchests.yml");
         if (yamlFile.exists()) {
-            //TODO: Do yaml loading
             Yaml yaml = new Yaml();
             try {
                 FileReader reader = new FileReader(yamlFile);
@@ -173,7 +174,6 @@ public class DropChest extends JavaPlugin {
                     }
                 }
             } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             return;
@@ -515,28 +515,11 @@ public class DropChest extends JavaPlugin {
                                     if (chest != null) {
                                         if (ownsChest(chest, sender)) {
                                             try {
-                                                item = Material.valueOf(itemstring.toUpperCase());
+                                                item = Material.getMaterial(itemstring);
                                             } catch (IllegalArgumentException e) {
                                                 item = null;
                                             }
-                                            boolean materialNotFound = false;
-                                            if (item == null) {
-                                                Integer itemid = null;
-                                                try {
-                                                    itemid = Integer.valueOf(itemstring);
-                                                } catch (NumberFormatException e) {
-                                                    itemid = null;
-                                                }
-                                                if (itemid != null) {
-                                                    item = Material.getMaterial(itemid);
-                                                    if (item == null) {
-                                                        materialNotFound = true;
-                                                    }
-                                                } else {
-                                                    materialNotFound = true;
-                                                }
-                                            }
-                                            if (!materialNotFound) {
+                                            if (item != null) {
                                                 List<Material> filter = chest.getFilter(type);
                                                 if (filter.contains(item)) {
                                                     filter.remove(item);
@@ -691,26 +674,11 @@ public class DropChest extends JavaPlugin {
         if (cmd.getName().equals("dcitem")) {
             if (args.length == 1) {
                 int id = 0;
-                Material m = null;
-                try {
-                    id = Integer.valueOf(args[0]);
-                } catch (Exception e) {
-                    m = Material.matchMaterial(args[0].toUpperCase());
-                }
-                if (id != 0) {
-                    m = Material.getMaterial(id);
-                    if (m != null) {
-                        sender.sendMessage(ChatColor.YELLOW.toString() + id + ChatColor.WHITE + " is " + ChatColor.YELLOW.toString() + m.toString());
-                    } else {
-                        sender.sendMessage(ChatColor.RED + "That item does not exist.");
-                    }
+                Material m = Material.getMaterial(args[0]);
+                if (m != null) {
+                    sender.sendMessage(ChatColor.YELLOW.toString() + id + ChatColor.WHITE + " is " + ChatColor.YELLOW.toString() + m.toString());
                 } else {
-                    if (m != null) {
-                        id = m.getId();
-                        sender.sendMessage(ChatColor.YELLOW + m.toString() + ChatColor.WHITE + " is " + ChatColor.YELLOW + id);
-                    } else {
-                        sender.sendMessage(ChatColor.RED + "That item does not exist.");
-                    }
+                    sender.sendMessage(ChatColor.RED + "That item does not exist.");
                 }
                 return true;
             }

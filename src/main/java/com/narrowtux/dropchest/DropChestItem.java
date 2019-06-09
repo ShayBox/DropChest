@@ -23,6 +23,7 @@ import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.inventory.Inventory;
@@ -74,10 +75,10 @@ public class DropChestItem implements Serializable {
     }
 
     static public boolean acceptsBlockType(Material m) {
-        return m.getId() == Material.CHEST.getId()
-                || m.getId() == Material.DISPENSER.getId()
-                || m.getId() == Material.FURNACE.getId()
-                || m.getId() == Material.BURNING_FURNACE.getId();
+        return m == Material.CHEST ||
+                m == Material.TRAPPED_CHEST ||
+                m == Material.FURNACE ||
+                m == Material.DISPENSER;
     }
 
     private void initFilter() {
@@ -156,7 +157,7 @@ public class DropChestItem implements Serializable {
             ItemStack istack = inv.getItem(j);
             if (istack != null) {
                 totalItems += istack.getAmount();
-                if (istack.getTypeId() == 0) {
+                if (istack.getType() == Material.AIR) {
                     maxStackSize += 64;
                 } else {
                     maxStackSize += istack.getMaxStackSize();
@@ -200,7 +201,7 @@ public class DropChestItem implements Serializable {
             return ret;
         } else {
             for (Material m : filter.get(filterType)) {
-                if (m.getId() == item.getTypeId()) {
+                if (m == item.getType()) {
                     pm.callEvent(fillEvent);
                     return getInventory().addItem(item);
                 }
@@ -227,14 +228,15 @@ public class DropChestItem implements Serializable {
 
     public void setRedstone(boolean value) {
         Block below = getBlock().getRelative(BlockFace.DOWN);
-        if (below.getTypeId() == Material.LEVER.getId()) {
-            byte data = below.getData();
-            if (value) {
-                data = 0x8 | 0x5;
-            } else {
-                data = 0x5;
-            }
-            below.setData(data);
+        if (below.getType() == Material.LEVER) {
+            BlockData data = below.getBlockData();
+            // TODO: FIX
+//            if (value) {
+//                data = 0x8 | 0x5;
+//            } else {
+//                data = 0x5;
+//            }
+            below.setBlockData(data);
         }
     }
 
@@ -448,7 +450,7 @@ public class DropChestItem implements Serializable {
             for (int i = 0; i < items.length; i++) {
                 ItemStack is = items[i];
                 if (is.getType().equals(Material.COAL)
-                        || is.getType().equals(Material.WOOD)
+                        || is.getType().equals(Material.LEGACY_WOOD)
                         || is.getType().equals(Material.LAVA_BUCKET)) {
                     //this is fuel
                     ItemStack fs = furn[1];
@@ -477,7 +479,7 @@ public class DropChestItem implements Serializable {
                     }
                 }
                 if (is.getType().toString().contains("ORE") ||
-                        is.getType().equals(Material.LOG) ||
+                        is.getType().equals(Material.LEGACY_LOG) ||
                         is.getType().equals(Material.CACTUS) ||
                         is.getType().equals(Material.SAND) ||
                         is.getType().equals(Material.COBBLESTONE)) {
@@ -703,7 +705,7 @@ public class DropChestItem implements Serializable {
             List<Material> filter = getFilter(type);
             ArrayList<String> items = (ArrayList<String>) filters.get(typename);
             for (String item : items) {
-                filter.add(Material.getMaterial(Integer.valueOf(item)));
+                filter.add(Material.getMaterial(item));
             }
         }
     }

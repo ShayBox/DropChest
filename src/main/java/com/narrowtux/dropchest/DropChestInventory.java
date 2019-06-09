@@ -109,7 +109,7 @@ public class DropChestInventory implements Inventory {
         return null;
     }
 
-    @Override
+//    @Override
     public String getTitle() {
         return null;
     }
@@ -169,7 +169,7 @@ public class DropChestInventory implements Inventory {
         return false;
     }
 
-    @Override
+//    @Override
     public boolean contains(int materialId, int amount) {
         return false;
     }
@@ -205,26 +205,23 @@ public class DropChestInventory implements Inventory {
         return false;
     }
 
-    @Override
+//    @Override
     public HashMap<Integer, ? extends ItemStack> all(int materialId) {
         return null;
     }
 
     //    @Override
     public int first(int arg0) {
-        // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
     public int first(Material arg0) {
-        // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
     public int first(ItemStack arg0) {
-        // TODO Auto-generated method stub
         return 0;
     }
 
@@ -233,14 +230,13 @@ public class DropChestInventory implements Inventory {
         return first(0);
     }
 
-    @Override
+//    @Override
     public void remove(int materialId) {
 
     }
 
     @Override
     public ItemStack[] getContents() {
-        //TODO
         return null;
     }
 
@@ -261,7 +257,7 @@ public class DropChestInventory implements Inventory {
 
     }
 
-    @Override
+//    @Override
     public boolean contains(int materialId) {
         return false;
     }
@@ -295,7 +291,7 @@ public class DropChestInventory implements Inventory {
 
     }
 
-    @Override
+//    @Override
     public String getName() {
         return null;
     }
