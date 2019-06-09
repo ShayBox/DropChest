@@ -28,7 +28,7 @@ public class DropChestWorldListener implements Listener {
     public void onChunkUnload(ChunkUnloadEvent event) {
         for (DropChestItem item : plugin.getChests()) {
             if (item.getBlock().getChunk().equals(event.getChunk())) {
-                event.setCancelled(true);
+                event.getChunk().load();
                 return;
             }
         }
