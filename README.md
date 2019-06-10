@@ -2,6 +2,10 @@
 DropChest
 =========
 
+This is a legacy fork kept "up to date" for the sake of compatibility
+I would recommend using my rewrite DropChest2 (WIP) as I am focusing my efforts there
+I will be keeping this project functional, but will not be fixing bugs.
+
 Copyright (c) 2011-2012, Moritz Schmale <narrow.m@gmail.com>  
 Copyright (c) 2016-2019, Shayne Hartford <shayneehartford@gmail.com>  
 DropChest is licensed under [GNU GENERAL PUBLIC LICENSE Version 3][License]
